@@ -32,7 +32,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: pdo, pdo_mysql, mbstring, xml, bcmath
+          extensions: pdo, pdo_mysql, mbstring, xml, bcmath, fileinfo, curl
           coverage: none
 
       - name: Copy env
@@ -40,7 +40,7 @@ jobs:
         working-directory: backend
 
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install --no-interaction --prefer-dist --no-scripts
         working-directory: backend
 
       - name: Generate app key
@@ -52,5 +52,5 @@ jobs:
         working-directory: backend
 
       - name: Run tests
-        run: php artisan test
+        run: php vendor/bin/pest --no-coverage
         working-directory: backend
