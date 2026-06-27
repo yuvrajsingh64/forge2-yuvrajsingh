@@ -1,0 +1,36 @@
+provider: eastrouter
+base_url: https://api.eastrouter.com/v1
+api_key: ${EASTROUTER_API_KEY}
+model: deepseek/deepseek-v4-pro
+
+memory:
+  enabled: true
+  backend: file
+  path: .hermes/memory.json
+
+slack:
+  enabled: true
+  app_token: ${SLACK_APP_TOKEN}
+  bot_token: ${SLACK_BOT_TOKEN}
+  channels:
+    sprint_main: sprint-main
+    agent_coder: agent-coder
+    human_review: human-review
+    ci_cd: ci-cd
+
+role: orchestrator
+description: |
+  Hermes is the product owner and sprint orchestrator for PulseDesk.
+  It receives the feature spec from the human, decomposes it into a
+  scoped sprint backlog, assigns issues to OpenClaw in #agent-coder,
+  reviews OpenClaw reports in #agent-log, and flags anything requiring
+  human decision to #human-review. It maintains sprint state in memory
+  across the session.
+
+behavior:
+  sprint_decomposition: true
+  issue_assignment: true
+  review_reports: true
+  escalate_blockers: true
+  heartbeat_cron: "*/15 * * * *"
+  heartbeat_channel: sprint-main

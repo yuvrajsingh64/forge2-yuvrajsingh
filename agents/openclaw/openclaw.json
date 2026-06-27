@@ -1,0 +1,56 @@
+{
+  "name": "OpenClaw",
+  "role": "coder",
+  "model": {
+    "provider": "anthropic_compatible",
+    "base_url": "https://api.eastrouter.com/api/anthropic",
+    "api_key": "${EASTROUTER_API_KEY}",
+    "model_id": "z-ai/glm-5.1",
+    "fallback_model_id": "z-ai/glm-4.5-air"
+  },
+  "workspace": {
+    "working_dir": ".",
+    "command_execution": true,
+    "allowed_commands": [
+      "php",
+      "composer",
+      "npm",
+      "npx",
+      "git",
+      "mkdir",
+      "cp",
+      "mv",
+      "cat",
+      "ls"
+    ]
+  },
+  "slack": {
+    "enabled": true,
+    "app_token": "${SLACK_APP_TOKEN}",
+    "bot_token": "${SLACK_BOT_TOKEN}",
+    "listen_channel": "agent-coder",
+    "report_channel": "agent-log",
+    "ci_channel": "ci-cd"
+  },
+  "skills": [
+    "file_read",
+    "file_write",
+    "shell_execute",
+    "git_commit",
+    "github_pr_open",
+    "slack_post"
+  ],
+  "report_format": {
+    "sections": [
+      "What I Did",
+      "What's Left",
+      "What Needs Your Call"
+    ]
+  },
+  "behavior": {
+    "open_pr_after_issue": true,
+    "run_tests_before_pr": true,
+    "never_merge_to_main": true,
+    "post_report_to_slack": true
+  }
+}
