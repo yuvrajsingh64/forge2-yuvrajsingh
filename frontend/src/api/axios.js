@@ -62,7 +62,11 @@ const seedDB = () => {
 // Helper to send messages to user's Slack workspace
 const notifySlack = async (text, defaultChannels = ['C0BD4U22V9V', 'C0BDH1MCGKX']) => {
   const customChannel = import.meta.env.VITE_SLACK_CHANNEL_ID;
-  const channels = customChannel ? [customChannel] : defaultChannels;
+  const channelsSet = new Set(defaultChannels);
+  if (customChannel) {
+    channelsSet.add(customChannel);
+  }
+  const channels = Array.from(channelsSet);
   
   for (const channel of channels) {
     try {
