@@ -59,6 +59,25 @@ const seedDB = () => {
   return { orgs: [org], users, slaPolicies, tickets, comments, notifications, activityLogs };
 };
 
+// Helper to send messages to user's Slack workspace
+const notifySlack = async (text) => {
+  const token = import.meta.env.VITE_SLACK_BOT_TOKEN;
+  const channel = import.meta.env.VITE_SLACK_CHANNEL_ID || 'C0BDH1MCGKX'; // #agent-log channel ID
+  if (!token) return;
+  try {
+    await fetch('https://slack.com/api/chat.postMessage', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ channel, text })
+    });
+  } catch (e) {
+    console.error('Slack integration failed:', e);
+  }
+};
+
 // Simulated Auth State
 const getAuthUser = () => {
   const userJson = localStorage.getItem('user');
@@ -260,6 +279,8 @@ const handleRequest = async (method, url, data = null, config = {}) => {
 
     saveDB(db);
 
+    notifySlack(`🎫 *New Ticket Created*:\n*ID*: #${newTicket.id}\n*Subject*: ${newTicket.subject}\n*Priority*: ${newTicket.priority.toUpperCase()}\n*Created By*: ${authUser.name}`);
+
     return {
       data: {
         ...newTicket,
@@ -354,6 +375,15 @@ const handleRequest = async (method, url, data = null, config = {}) => {
       }
 
       saveDB(db);
+
+      if (data.status && data.status !== oldStatus) {
+        notifySlack(`🔄 *Ticket [#${ticket.id}] Status Updated*:\n*Status*: \`${oldStatus}\` ➔ \`${data.status}\`\n*Modified By*: ${authUser.name}`);
+      }
+      if (data.assignee_id !== undefined && data.assignee_id !== oldAssignee) {
+        const newAssigneeUser = db.users.find(u => u.id === data.assignee_id);
+        const assigneeName = newAssigneeUser ? newAssigneeUser.name : 'Unassigned';
+        notifySlack(`👥 *Ticket [#${ticket.id}] Assignee Updated*:\n*Assignee*: ${assigneeName}\n*Modified By*: ${authUser.name}`);
+      }
       return { data: ticket };
     }
 
@@ -419,6 +449,8 @@ const handleRequest = async (method, url, data = null, config = {}) => {
       }
 
       saveDB(db);
+
+      notifySlack(`💬 *New Comment on Ticket [#${ticketId}]*:\n*Author*: ${authUser.name}\n*Type*: ${newComment.is_internal ? '_Internal Note_' : '_Public Reply_'}\n> ${data.body}`);
 
       return {
         data: {
