@@ -23,6 +23,19 @@ export default function Login() {
     }
   }
 
+  const handleQuickLogin = async (email, password) => {
+    setError('')
+    setLoading(true)
+    try {
+      await login(email, password)
+      navigate('/dashboard')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid credentials.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div style={{
       minHeight: '100vh',
@@ -156,10 +169,63 @@ export default function Login() {
             </button>
           </form>
 
-          <div style={{ marginTop: '20px', borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center' }}>
-              Demo: <span style={{ color: 'var(--accent)', fontFamily: 'monospace' }}>admin@acmedemo.com</span> / <span style={{ color: 'var(--accent)', fontFamily: 'monospace' }}>password</span>
+          <div style={{ marginTop: '24px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <p style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-secondary)', textAlign: 'center', marginBottom: '12px' }}>
+              Quick Demo Login:
             </p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('admin@acmedemo.com', 'password')}
+                style={{
+                  padding: '8px 12px',
+                  background: 'rgba(99,102,241,0.1)',
+                  border: '1px solid rgba(99,102,241,0.2)',
+                  borderRadius: '8px',
+                  color: 'var(--accent)',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🔑 Login as Admin (Alex Admin)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('agent1@acmedemo.com', 'password')}
+                style={{
+                  padding: '8px 12px',
+                  background: 'rgba(16,185,129,0.1)',
+                  border: '1px solid rgba(16,185,129,0.2)',
+                  borderRadius: '8px',
+                  color: '#10b981',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                🛠️ Login as Agent (Sarah Agent)
+              </button>
+              <button
+                type="button"
+                onClick={() => handleQuickLogin('customer1@acmedemo.com', 'password')}
+                style={{
+                  padding: '8px 12px',
+                  background: 'rgba(245,158,11,0.1)',
+                  border: '1px solid rgba(245,158,11,0.2)',
+                  borderRadius: '8px',
+                  color: '#f59e0b',
+                  fontSize: '0.82rem',
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s'
+                }}
+              >
+                👤 Login as Customer (John Customer)
+              </button>
+            </div>
           </div>
         </div>
 

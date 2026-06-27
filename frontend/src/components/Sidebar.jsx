@@ -60,29 +60,31 @@ export default function Sidebar() {
 
       <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
         <p style={{ fontSize: '0.65rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.08em', padding: '8px 8px 4px' }}>Menu</p>
-        {navItems.map(item => (
-          <NavLink
-            key={item.to}
-            to={item.to}
-            end={item.to === '/dashboard'}
-            style={({ isActive }) => ({
-              display: 'flex',
-              alignItems: 'center',
-              gap: '10px',
-              padding: '9px 12px',
-              borderRadius: '8px',
-              fontSize: '0.875rem',
-              fontWeight: isActive ? 600 : 400,
-              color: isActive ? '#fff' : 'var(--text-secondary)',
-              background: isActive ? 'var(--accent)' : 'transparent',
-              transition: 'all 0.15s',
-              textDecoration: 'none',
-            })}
-          >
-            <span style={{ fontSize: '16px' }}>{item.icon}</span>
-            {item.label}
-          </NavLink>
-        ))}
+        {navItems
+          .filter(item => !(item.label === 'New Ticket' && user?.role === 'admin'))
+          .map(item => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.to === '/dashboard'}
+              style={({ isActive }) => ({
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                padding: '9px 12px',
+                borderRadius: '8px',
+                fontSize: '0.875rem',
+                fontWeight: isActive ? 600 : 400,
+                color: isActive ? '#fff' : 'var(--text-secondary)',
+                background: isActive ? 'var(--accent)' : 'transparent',
+                transition: 'all 0.15s',
+                textDecoration: 'none',
+              })}
+            >
+              <span style={{ fontSize: '16px' }}>{item.icon}</span>
+              {item.label}
+            </NavLink>
+          ))}
 
         {(user?.role === 'admin' || user?.role === 'agent') && (
           <>
