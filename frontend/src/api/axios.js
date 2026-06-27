@@ -60,18 +60,22 @@ const seedDB = () => {
 };
 
 // Helper to send messages to user's Slack workspace
-const notifySlack = async (text) => {
-  const channel = import.meta.env.VITE_SLACK_CHANNEL_ID || 'C0BD4U22V9V';
-  try {
-    await fetch('https://adaptable-youthfulness-production-1787.up.railway.app/api/slack-notify', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ channel, text })
-    });
-  } catch (e) {
-    console.error('Slack integration failed:', e);
+const notifySlack = async (text, defaultChannels = ['C0BD4U22V9V', 'C0BDH1MCGKX']) => {
+  const customChannel = import.meta.env.VITE_SLACK_CHANNEL_ID;
+  const channels = customChannel ? [customChannel] : defaultChannels;
+  
+  for (const channel of channels) {
+    try {
+      await fetch('https://adaptable-youthfulness-production-1787.up.railway.app/api/slack-notify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ channel, text })
+      });
+    } catch (e) {
+      console.error('Slack integration failed:', e);
+    }
   }
 };
 
@@ -374,12 +378,12 @@ const handleRequest = async (method, url, data = null, config = {}) => {
       saveDB(db);
 
       if (data.status && data.status !== oldStatus) {
-        notifySlack(`🔄 *Ticket [#${ticket.id}] Status Updated*:\n*Status*: \`${oldStatus}\` ➔ \`${data.status}\`\n*Modified By*: ${authUser.name}`);
+        notifySlack(`🔄 *Ticket [#${ticket.id}] Status Updated*:\n*Status*: \`${oldStatus}\` ➔ \`${data.status}\`\n*Modified By*: ${authUser.name}`, ['C0BDH1MCGKX', 'C0BDQ2M7ZHS']);
       }
       if (data.assignee_id !== undefined && data.assignee_id !== oldAssignee) {
         const newAssigneeUser = db.users.find(u => u.id === data.assignee_id);
         const assigneeName = newAssigneeUser ? newAssigneeUser.name : 'Unassigned';
-        notifySlack(`👥 *Ticket [#${ticket.id}] Assignee Updated*:\n*Assignee*: ${assigneeName}\n*Modified By*: ${authUser.name}`);
+        notifySlack(`👥 *Ticket [#${ticket.id}] Assignee Updated*:\n*Assignee*: ${assigneeName}\n*Modified By*: ${authUser.name}`, ['C0BDH1MCGKX', 'C0BDQ2M7ZHS']);
       }
       return { data: ticket };
     }
@@ -447,7 +451,7 @@ const handleRequest = async (method, url, data = null, config = {}) => {
 
       saveDB(db);
 
-      notifySlack(`💬 *New Comment on Ticket [#${ticketId}]*:\n*Author*: ${authUser.name}\n*Type*: ${newComment.is_internal ? '_Internal Note_' : '_Public Reply_'}\n> ${data.body}`);
+      notifySlack(`💬 *New Comment on Ticket [#${ticketId}]*:\n*Author*: ${authUser.name}\n*Type*: ${newComment.is_internal ? '_Internal Note_' : '_Public Reply_'}\n> ${data.body}`, ['C0BDH1MCGKX', 'C0BDN8U7GEM']);
 
       return {
         data: {
