@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import DashboardLayout from '../layouts/DashboardLayout'
-import StatusBadge from '../components/StatusBadge'
-import PriorityBadge from '../components/PriorityBadge'
-import api from '../api/axios'
-import { useAuth } from '../context/AuthContext'
+import DashboardLayout from '../../layouts/DashboardLayout'
+import StatusBadge from '../../components/StatusBadge'
+import PriorityBadge from '../../components/PriorityBadge'
+import api from '../../api/axios'
+import { useAuth } from '../../context/AuthContext'
 
 const btnBase = {
   padding: '6px 14px',
