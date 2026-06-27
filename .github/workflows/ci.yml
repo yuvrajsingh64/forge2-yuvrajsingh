@@ -40,7 +40,7 @@ jobs:
         working-directory: backend
 
       - name: Install Composer dependencies
-        run: composer install --no-interaction --prefer-dist --no-scripts
+        run: composer install --no-interaction --prefer-dist
         working-directory: backend
 
       - name: Generate app key
@@ -52,5 +52,5 @@ jobs:
         working-directory: backend
 
       - name: Run tests
-        run: php vendor/bin/pest --no-coverage
+        run: php artisan test
         working-directory: backend
