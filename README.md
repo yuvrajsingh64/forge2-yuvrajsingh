@@ -98,4 +98,5 @@ Deployed on Railway — see SUBMISSION.md for URL once available.
 
 ## Notes
 
-Multi-tenancy is enforced server-side only. The `organization_id` is derived exclusively from `auth()->user()->organization_id`. No client-supplied tenant identifier is trusted. Cross-tenant probe: authenticated as Org A, requesting `/api/tickets/{id}` belonging to Org B returns `403`.
+Multi-tenancy is enforced server-side only. The `organization_id` is derived exclusively from `auth()->user()->organization_id`. No client-supplied tenant identifier is trusted. Cross-tenant probe: authenticated as Org A, requesting `/api/tickets/{id}` belonging to Org B returns `404` — the record is invisible to the tenant scope, not explicitly denied.
+

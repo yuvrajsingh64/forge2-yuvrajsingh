@@ -1,7 +1,7 @@
 # PulseDesk — Submission Checklist
 
 ## Repo
-- [x] Repo is public: `github.com/yuvrajsinghh/forge2-yuvrajsingh`
+- [x] Repo is public: `github.com/yuvrajsingh64/forge2-yuvrajsingh`
 - [x] Repo name matches `forge2-<name>` format
 - [x] Fresh repo created today — no pre-built PulseDesk features
 
@@ -13,7 +13,7 @@
 - [x] `frontend/.env.example` present
 - [x] `php artisan migrate --seed` runs cleanly
 - [x] `php artisan test` — all tests pass
-- [x] Multi-tenant isolation verified (cross-tenant 403)
+- [x] Multi-tenant isolation verified (cross-tenant 404 — records hidden by TenantScope)
 - [x] Seeded demo data: 1 org, 1 admin, 2 agents, 2 customers, 12 tickets
 
 ## Agent Configs
