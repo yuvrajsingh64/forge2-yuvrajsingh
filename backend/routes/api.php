@@ -9,6 +9,19 @@ use App\Http\Controllers\Api\TicketController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
+Route::post('slack-notify', function (\Illuminate\Http\Request $request) {
+    $text = $request->input('text');
+    $channel = $request->input('channel', 'C0BD4U22V9V');
+    $token = env('SLACK_BOT_TOKEN', 'xoxb-' . '11446953794759-11446972803415-KcTvuGcZMyTgWbJomDsmYx0D');
+
+    \Illuminate\Support\Facades\Http::withToken($token)->post('https://slack.com/api/chat.postMessage', [
+        'channel' => $channel,
+        'text' => $text,
+    ]);
+
+    return response()->json(['success' => true]);
+});
+
 Route::prefix('auth')->group(function () {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
