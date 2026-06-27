@@ -50,14 +50,14 @@ it('blocks org a user from viewing org b ticket directly', function () {
     $response = $this->actingAs($this->userA, 'sanctum')
         ->getJson('/api/tickets/' . $this->ticketB->id);
 
-    $response->assertForbidden();
+    $response->assertNotFound();
 });
 
 it('blocks org a user from updating org b ticket', function () {
     $response = $this->actingAs($this->userA, 'sanctum')
         ->putJson('/api/tickets/' . $this->ticketB->id, ['status' => 'closed']);
 
-    $response->assertForbidden();
+    $response->assertNotFound();
 });
 
 it('blocks org a admin from deleting org b ticket', function () {
@@ -72,6 +72,6 @@ it('blocks org a admin from deleting org b ticket', function () {
     $response = $this->actingAs($adminA, 'sanctum')
         ->deleteJson('/api/tickets/' . $this->ticketB->id);
 
-    $response->assertForbidden();
+    $response->assertNotFound();
     $this->assertDatabaseHas('tickets', ['id' => $this->ticketB->id]);
 });
